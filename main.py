@@ -1,30 +1,24 @@
 from typing import List
 
-from fastapi import FastAPI, Query, Path, Body
-from schemas import Author, Book, BookOut
+import shutil
+from fastapi import FastAPI, UploadFile, File
 
 
 app = FastAPI()
 
 
-@app.post('/book', response_model=BookOut)
-def create_book(item: Book):
-    # book = item.dict()
-    # book['id'] = 3
-    # return book
-    return(BookOut(**item.dict(), id=5))
+@app.post('/')
+async def root(file: UploadFile = File(...)):
+    with open(f'{file.filename}', 'wb') as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    return {"file_name": file.filename}
 
 
-# @app.post('/author')
-# def create_author(author: Author = Body(..., embed=True)):
-#     return {"author": author}
+@app.post('/img')
+async def upload_image(files: List[UploadFile] = File(...)):
+    for img in files:
+        with open(f'{img.filename}', 'wb') as buffer:
+            shutil.copyfileobj(img.file, buffer)
 
-
-# @app.get('/book')
-# def get_book(q: List[str] = Query(["test", "test2"], description="Search book", deprecated=True)):
-#     return q
-
-
-# @app.get('/book/{pk}')
-# def get_single_book(pk: int = Path(..., gt=1, le=20), pages: int = Query(None, gt=10, le=500)):
-#     return {"pk": pk, "pages": pages}
+    return {"file_name": "Good"}
