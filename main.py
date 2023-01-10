@@ -14,7 +14,7 @@ def create_book(item: Book):
     # return book
     return(BookOut(**item.dict(), id=5))
 
-#
+##
 # @app.post('/author')
 # def create_author(author: Author = Body(..., embed=True)):
 #     return {"author": author}
