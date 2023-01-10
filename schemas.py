@@ -1,35 +1,22 @@
 from typing import List
 
-from pydantic import BaseModel, validator, Field
-from datetime import date
+from pydantic import BaseModel
 
 
-class Genre(BaseModel):
+class User(BaseModel):
+    id: int
     name: str
 
 
-class Author(BaseModel):
-    first_name: str = Field(..., max_length=25)
-    last_name: str
-    age: int = Field(..., gt=15, lt=90,
-                     description='Author age must be more than 15 and less than 90')
-
-    # @validator('age')
-    # def check_age(cls, v):
-    #     if v < 15 > 90:
-    #         raise ValueError('Author age must be more than 15')
-    #     return v
-
-
-class Book(BaseModel):
+class UploadVideo(BaseModel):
     title: str
-    writer: str
-    duration: str
-    date: date
-    summary: str
-    genres: List[Genre] = []
-    pages: int
+    description: str
 
 
-class BookOut(Book):
-    id: int
+class GetVideo(BaseModel):
+    user: User
+    video: UploadVideo
+
+
+class Message(BaseModel):
+    message: str
